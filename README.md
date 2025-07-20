@@ -52,7 +52,7 @@ _Below you can find the description of the Ansible scripts, files, and roles._
 
 _Below is an example of how you can set up the Kubernetes cluster on your virtual machines._ 
 
-1. First of all, you should create the **[ vaults.yml ]** file in the root directory with Ansible scripts.
+1. First of all, you should create the _vaults.yml_ file in the root directory with Ansible scripts.
    Create a file with the following content:
    ```sh
    ---
@@ -60,4 +60,21 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ansible_user: loginUserName
    ansible_password: loginPassword
    ansible_become_password: sudoPassword
+   ```
+2. In the second step, you have to update the _inventory.yml_ file and update IP addresses for control-planes, workers, and hostnames.
+   ```sh
+   control-planes:
+      hosts:
+        control-plane-01:
+          ansible_host: 192.168.0.1                <--- update it
+          ansible_host_name: k8s-control-plane-01  <--- update it
+
+    workers:
+      hosts:
+        worker-01:
+          ansible_host: 192.168.0.2                <--- update it
+          ansible_host_name: k8s-worker-01         <--- update it
+        worker-02:
+          ansible_host: 192.168.0.3                <--- update it
+          ansible_host_name: k8s-worker-02         <--- update it
    ```
