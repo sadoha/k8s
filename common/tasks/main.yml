@@ -1,0 +1,171 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for common
+- name: Check if Kubernetes GPG key exists
+  stat:
+    path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  register: gpg_key
+  tags:
+    - common
+
+- name: Download Kubernetes GPG key
+  get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key
+    dest: /tmp/k8s-release.key
+    mode: '0644'
+  when: not gpg_key.stat.exists
+  tags:
+    - common
+
+- name: Import Kubernetes GPG key
+  command: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/k8s-release.key
+  when: not gpg_key.stat.exists
+  tags:
+    - common
+
+- name: Add Kubernetes repository
+  copy:
+    content: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /\n"
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    mode: '0644'
+  tags:
+    - common
+
+- name: Update apt cache and upgrade packages
+  apt:
+    update_cache: yes
+    upgrade: yes
+  tags:
+    - common
+
+- name: Update hostnames
+  hostname:
+    name: "{{ ansible_host_name }}"
+  tags:
+    - common
+
+- name: Add IP address of all hosts to all hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: "{{ hostvars[item].ansible_host }} {{ item }}"
+    state: present
+  when: hostvars[item].ansible_host is defined
+  with_items: "{{ groups.cluster }}"
+  tags:
+    - common
+
+- name: Disable swap
+  command: swapoff -a
+  changed_when: false
+  tags:
+    - common
+
+- name: Disable swap in fstab
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+.*)$'
+    replace: '#\1'
+  tags:
+    - common
+
+- name: Install required packages
+  apt:
+    name: 
+      - vim
+      - ntp
+      - gpg
+      - curl
+      - wget
+      - telnet
+      - dnsutils
+      - docker.io
+      - net-tools
+      - ca-certificates
+      - apt-transport-https
+    state: present
+  tags:
+    - common
+
+- name: verify docker installation
+  command: docker --version
+  register: docker_version
+  changed_when: false
+  tags:
+    - common
+
+- name: add modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: 
+    - overlay
+    - br_netfilter
+  tags:
+    - common
+
+- name: create k8s.conf with overlay and br_netfilter modules
+  copy:
+    content: |
+      overlay
+      br_netfilter
+    dest: /etc/modules-load.d/k8s.conf
+  tags:
+    - common
+
+# set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- sysctl:
+    name: "{{ item }}"
+    value: '1'
+    sysctl_file: /etc/sysctl.d/k8s.conf 
+    state: present
+    reload: true
+  loop:
+    - net.bridge.bridge-nf-call-ip6tables
+    - net.bridge.bridge-nf-call-iptables
+    - net.ipv4.ip_forward
+  tags:
+    - common
+
+- name: Create a separate directory for containerd
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+  tags:
+    - common
+
+- name: Check if a containerd config exists
+  stat:
+    path: /etc/containerd/config.toml
+  register: containerd_config
+  tags:
+    - common
+
+- name: Create a containerd config file
+  command: sh -c "containerd config default > /etc/containerd/config.toml"
+  when: not containerd_config.stat.exists
+  notify:
+    - restart containerd
+  tags:
+    - common
+
+- name: Install Kubernetes packages
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+  tags:
+    - common
+    
+- name: Hold Kubernetes packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+  tags:
+    - common

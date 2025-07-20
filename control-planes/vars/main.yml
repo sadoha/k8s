@@ -1,0 +1,4 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for control-planes
+pod_network_cidr: "10.244.0.0/16"

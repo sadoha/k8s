@@ -1,0 +1,6 @@
+---
+- name: Initialize Kubernetes Control Planes
+  hosts: control-planes
+  become: true
+  roles:
+    - control-planes

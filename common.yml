@@ -1,0 +1,6 @@
+---
+- name: Setup Kubernetes Dependencies
+  hosts: cluster
+  become: true
+  roles:
+    - common
