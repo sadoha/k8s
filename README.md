@@ -61,7 +61,7 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ansible_password: loginPassword
    ansible_become_password: sudoPassword
    ```
-2. In the second step, you have to update the _inventory.yml_ file and update IP addresses for control-planes, workers, and hostnames.
+2. In the second step, you have to update the _inventory.yml_ file and update IP addresses for the control-plane, workers, and hostnames.
    ```sh
    control-planes:
       hosts:
@@ -80,8 +80,22 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ```
 3. In a third step, you can find out how to deploy the Ansible playbooks.
 
-   * _Full deploy, for all control-planes and workers._
+   * _Full deploy, for all control-plane and workers._
    ```sh
    ansible-playbook main.yml
    ```
    
+   * _Use the command below if you only need to prepare the control-plane and all workers, without kubeadm initiation._
+   ```sh
+   ansible-playbook main.yml --tags common
+   ```
+
+   * _Use it if you only need to kubeadm initialize the control-plane._
+   ```sh
+   ansible-playbook main.yml --tags control-planes
+   ```
+
+   * _Use the command below if you need to prepare the control-plane, all workers, and set up CNI without kubeadm initiation._
+   ```sh
+   ansible-playbook main.yml --skip-tags kubeadm-init
+   ```
