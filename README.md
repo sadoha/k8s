@@ -9,7 +9,7 @@ _This is an example of how to deploy the Kubernetes cluster to Ubuntu virtual ma
 ### Prerequisites
 
 This is an example of how to list things you need to use the Ansible scripts.
-* Minimum two virtual machines with Ubuntu
+* Minimum two virtual machines with Ubuntu, but the current scripts are for one control-plane node and two workers. 
 * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 ## The Ansible scripts overview
@@ -78,3 +78,10 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
           ansible_host: 192.168.0.3                <--- update it
           ansible_host_name: k8s-worker-02         <--- update it
    ```
+3. In a third step, you can find out how to deploy the Ansible playbooks.
+
+   * _Full deploy, for all control-planes and workers._
+   ```sh
+   ansible-playbook main.yml
+   ```
+   
