@@ -2,5 +2,7 @@
 - name: Setup Kubernetes Dependencies
   hosts: cluster
   become: true
+  vars_files:
+    - vaults.yml
   roles:
     - common
