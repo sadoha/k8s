@@ -85,17 +85,17 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ansible-playbook main.yml
    ```
    
-   * _Use the command below if you only need to prepare the control-plane and all workers, without kubeadm initiation._
+   * _Use the command below if you only need to prepare the control-plane and all workers, without kubeadm init._
    ```sh
    ansible-playbook main.yml --tags common
    ```
 
-   * _Use it if you only need to kubeadm initialize the control-plane._
+   * _Use it if you only need to kubeadm init the control-plane._
    ```sh
    ansible-playbook main.yml --tags control-planes
    ```
 
-   * _Use the command below if you need to prepare the control-plane, all workers, and set up CNI without kubeadm initiation._
+   * _Use the command below if you need to prepare the control-plane, all workers, and set up CNI without kubeadm init._
    ```sh
    ansible-playbook main.yml --skip-tags kubeadm-init
    ```
