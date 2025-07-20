@@ -1,10 +1,10 @@
 # k8s
 ------------
-Ansible scripts to deploy Kubernetes on Ubuntu virtual machines or servers.
+_Ansible scripts to deploy Kubernetes on Ubuntu virtual machines or servers._
 
 ## Getting Started
 
-This is an example of how to deploy the Kubernetes cluster to Ubuntu virtual machines or servers.
+_This is an example of how to deploy the Kubernetes cluster to Ubuntu virtual machines or servers._
 
 ### Prerequisites
 
@@ -14,7 +14,7 @@ This is an example of how to list things you need to use the Ansible scripts.
 
 ## The Ansible scripts overview
 
-Below you can find the description of the Ansible scripts, files, and roles.
+_Below you can find the description of the Ansible scripts, files, and roles._
 
 #### The layout of directories
 
@@ -46,5 +46,18 @@ Below you can find the description of the Ansible scripts, files, and roles.
 ├── LICENSE
 ├── main.yml
 ├── README.md
-└── vaults.yml
+└── vaults.yml  <--- This file should be created manually because this file has sensitive variables.
   ```
+### Installation
+
+_Below is an example of how you can set up the Kubernetes cluster on your virtual machines._ 
+
+1. First of all, you should create the **[ vaults.yml ]** file in the root directory with Ansible scripts.
+   Create a file with the following content:
+   ```sh
+   ---
+   # The list of hidden credentials or sensitive variables
+   ansible_user: loginUserName
+   ansible_password: loginPassword
+   ansible_become_password: sudoPassword
+   ```
