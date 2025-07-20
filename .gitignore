@@ -4,7 +4,6 @@
 *.swp
 
 # Compiled source #
-# ###################
 *.com
 *.class
 *.dll
@@ -13,7 +12,6 @@
 *.so
 
 # Packages #
-# ############
 *.7z
 *.dmg
 *.gz
@@ -24,8 +22,7 @@
 *.zip
 *.dump
 
-# Logs and databases #
-# ######################
+# Logs #
 *.log
 
 # Backup files
