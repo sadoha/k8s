@@ -80,7 +80,7 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ```
 3. In a third step, you can find out how to deploy the Ansible playbooks.
 
-   * _Full deploy, for all control-plane and workers._
+   * _Full deploy, for the control-plane and all workers._
    ```sh
    ansible-playbook main.yml
    ```
