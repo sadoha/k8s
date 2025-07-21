@@ -1,4 +1,5 @@
 # k8s
+![screenshot](images/kubernetes-logo.png)
 ------------
 _Ansible scripts to deploy Kubernetes on Ubuntu virtual machines or servers._
 
@@ -81,25 +82,26 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
 3. In a third step, you can find out how to deploy the Ansible playbooks.
 
    * _Full deploy, for the control-plane and all workers._
-     
    ```sh
    ansible-playbook main.yml
    ```
    
    * _Use the command below if you only need to prepare the control-plane and all workers, without kubeadm init._
-     
    ```sh
    ansible-playbook main.yml --tags common
    ```
 
    * _Use it if you only need to kubeadm init the control-plane._
-     
    ```sh
    ansible-playbook main.yml --tags control-planes
    ```
 
    * _Use the command below if you need to prepare the control-plane, all workers, and set up CNI without kubeadm init._
-     
    ```sh
    ansible-playbook main.yml --skip-tags kubeadm-init
    ```
+4. Using this step, you can join any number of worker nodes to the cluster.
+   * _When the Kubernetes control-plane is initialized successfully in a previous step, you can join any number of worker nodes by running         the following on each as root._
+
+
+   ![screenshot](images/initialize-kubernetes-cluster.png)
