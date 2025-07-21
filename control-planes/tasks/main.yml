@@ -50,18 +50,21 @@
     dest: /tmp/kube-flannel.yml
     mode: '0644'
   become: false
+  changed_when: false
   tags:
     - control-planes
 
 - name: Apply Flannel network
   command: kubectl apply -f /tmp/kube-flannel.yml
   become: false
+  changed_when: false
   tags:
     - control-planes
 
 - name: Wait for Flannel pods to be ready
   command: kubectl wait --for=condition=Ready pods -l app=flannel --namespace kube-flannel --timeout=300s
   become: false
+  changed_when: false
   register: flannel_status
   retries: 30
   delay: 10
@@ -80,5 +83,12 @@
 - name: Display cluster status
   debug:
     var: cluster_status.stdout_lines
+  tags:
+    - control-planes
+
+- name: Get kubeadm join command
+  command: kubeadm token create --print-join-command
+  changed_when: False
+  register: join_command
   tags:
     - control-planes

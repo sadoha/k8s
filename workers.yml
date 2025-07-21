@@ -1,0 +1,8 @@
+---
+- name: Initialize Kubernetes Workers
+  hosts: cluster
+  become: true
+  vars_files:
+    - vaults.yml
+  roles:
+    - workers
