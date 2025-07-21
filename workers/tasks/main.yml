@@ -1,0 +1,15 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for workers
+- name: Check if kubelet.conf file exists
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf
+  tags:
+    - workers
+
+- name: Execute join command
+  command: "{{ hostvars[groups['control-planes'][0]].join_command.stdout }}"
+  when: not kubelet_conf.stat.exists
+  tags:
+    - workers
