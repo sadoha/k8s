@@ -22,32 +22,38 @@ _Below you can find the description of the Ansible scripts, files, and roles._
   ```sh
 ├── ansible.cfg
 ├── common
-│   ├── files
 │   ├── handlers
 │   │   └── main.yml
-│   ├── README.md
 │   ├── tasks
 │   │   └── main.yml
-│   ├── templates
 │   └── vars
 │       └── main.yml
 ├── common.yml
 ├── control-planes
-│   ├── files
 │   ├── handlers
 │   │   └── main.yml
-│   ├── README.md
 │   ├── tasks
 │   │   └── main.yml
-│   ├── templates
 │   └── vars
 │       └── main.yml
 ├── control-planes.yml
+├── images
+│   ├── initialize-kubernetes-cluster.png
+│   └── kubernetes-logo.png
 ├── inventory.yml
 ├── LICENSE
 ├── main.yml
 ├── README.md
-└── vaults.yml  <--- This file should be created manually because this file has sensitive variables.
+├── vaults.yml <----------------- This file should be created manually because this file has sensitive variables
+├── workers
+│   ├── control-planes.yml
+│   ├── handlers
+│   │   └── main.yml
+│   ├── tasks
+│   │   └── main.yml
+│   └── vars
+│       └── main.yml
+└── workers.yml
   ```
 ### Installation
 
@@ -81,7 +87,7 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ```
 3. In a third step, you can find out how to deploy the Ansible playbooks.
 
-   * _Full deploy, for the control-plane and all workers._
+   * _Full deploy, for the control-plane and join all workers._
    ```sh
    ansible-playbook main.yml
    ```
@@ -101,7 +107,11 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ansible-playbook main.yml --skip-tags kubeadm-init
    ```
 4. Using this step, you can join any number of worker nodes to the cluster.
-   * _When the Kubernetes control-plane is initialized successfully in a previous step, you can join any number of worker nodes by running         the following on each as root._
-
+   * _When the Kubernetes control-plane is initialized successfully in a previous step, you can join any number of worker nodes by running         the following._
+     
+   ```sh
+   ansible-playbook main.yml --tags workers
+   ```
+   * _Also, you can manually join any number of worker nodes._
 
    ![screenshot](images/initialize-kubernetes-cluster.png)
