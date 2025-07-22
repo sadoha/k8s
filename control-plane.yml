@@ -1,8 +1,8 @@
 ---
 - name: Initialize Kubernetes Control Planes
-  hosts: control-planes
+  hosts: control-plane
   become: true
   vars_files:
     - vaults.yml
   roles:
-    - control-planes
+    - control-plane

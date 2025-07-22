@@ -9,7 +9,7 @@
     - workers
 
 - name: Execute join command
-  command: "{{ hostvars[groups['control-planes'][0]].join_command.stdout }}"
+  command: "{{ hostvars[groups['control-plane'][0]].join_command.stdout }}"
   when: not kubelet_conf.stat.exists
   tags:
     - workers

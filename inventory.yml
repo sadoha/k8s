@@ -1,7 +1,7 @@
 ---
 all:
   children:
-    control-planes:
+    control-plane:
       hosts:
         control-plane-01:
           ansible_host: 192.168.50.35
@@ -18,7 +18,7 @@ all:
 
     cluster:
       children:
-        control-planes: {}
+        control-plane: {}
         workers: {}
   
   vars:

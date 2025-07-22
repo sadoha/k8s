@@ -1,6 +1,6 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# tasks file for control-planes
+# tasks file for control-plane
 - name: Initialize Kubernetes cluster
   command: kubeadm init --pod-network-cidr={{ pod_network_cidr }}
   register: kubeadm_init
@@ -8,12 +8,12 @@
   args:
     creates: /etc/kubernetes/admin.conf
   tags:
-    - control-planes
+    - control-plane
     - kubeadm-init
 
 - debug: msg="{{ kubeadm_init }}"
   tags:
-    - control-planes
+    - control-plane
     - kubeadm-init
 
 - name: Create .kube directory in user's home
@@ -23,7 +23,7 @@
     mode: '0755'
   become: false
   tags:
-    - control-planes
+    - control-plane
 
 - name: Copy kube admin config to user's home directory
   copy:
@@ -33,7 +33,7 @@
     mode: '0600'
   become: false
   tags:
-    - control-planes
+    - control-plane
 
 - name: Set ownership of kube config file
   file:
@@ -42,7 +42,7 @@
     group: "{{ ansible_user }}"
   become: false
   tags:
-    - control-planes
+    - control-plane
 
 - name: Download Flannel manifest
   get_url:
@@ -52,14 +52,14 @@
   become: false
   changed_when: false
   tags:
-    - control-planes
+    - control-plane
 
 - name: Apply Flannel network
   command: kubectl apply -f /tmp/kube-flannel.yml
   become: false
   changed_when: false
   tags:
-    - control-planes
+    - control-plane
 
 - name: Wait for Flannel pods to be ready
   command: kubectl wait --for=condition=Ready pods -l app=flannel --namespace kube-flannel --timeout=300s
@@ -70,7 +70,7 @@
   delay: 10
   until: flannel_status.rc == 0
   tags:
-    - control-planes
+    - control-plane
 
 - name: Get cluster status
   command: kubectl get nodes
@@ -78,17 +78,17 @@
   become: false
   changed_when: false
   tags:
-    - control-planes
+    - control-plane
 
 - name: Display cluster status
   debug:
     var: cluster_status.stdout_lines
   tags:
-    - control-planes
+    - control-plane
 
 - name: Get kubeadm join command
   command: kubeadm token create --print-join-command
   changed_when: False
   register: join_command
   tags:
-    - control-planes
+    - control-plane
