@@ -91,7 +91,10 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ```sh
    ansible-playbook main.yml
    ```
+
    
+## Additional options 
+
    * _Use the command below if you only need to prepare the control-plane and all workers, without kubeadm init._
    ```sh
    ansible-playbook main.yml --tags common
