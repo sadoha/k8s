@@ -78,6 +78,7 @@
       - curl
       - wget
       - telnet
+      - locales
       - dnsutils
       - docker.io
       - net-tools
@@ -86,6 +87,7 @@
     state: present
   tags:
     - common
+    - locale
 
 - name: verify docker installation
   command: docker --version
@@ -169,3 +171,49 @@
     - kubectl
   tags:
     - common
+
+- name: Ensure localisation files for '{{ config_system_locale }}' are available
+  locale_gen:
+    name: "{{ config_system_locale }}"
+    state: present
+  tags:
+    - common
+    - locale
+
+- name: Ensure localisation files for '{{ config_system_language }}' are available
+  locale_gen:
+    name: "{{ config_system_language }}"
+    state: present
+  tags:
+    - common
+    - locale
+
+- name: Get current locale and language configuration
+  command: localectl status
+  register: locale_status
+  changed_when: false
+  tags:
+    - common
+    - locale
+
+- name: Parse 'LANG' from current locale and language configuration
+  set_fact:
+    locale_lang: "{{ locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+  tags:
+    - common
+    - locale
+
+- name: Parse 'LANGUAGE' from current locale and language configuration
+  set_fact:
+    locale_language: "{{ locale_status.stdout | regex_search('LANGUAGE=([^\n]+)', '\\1') | default([locale_lang], true) | first }}"
+  tags:
+    - common
+    - locale
+
+- name: Configure locale to '{{ config_system_locale }}' and language to '{{ config_system_language }}'
+  become: yes
+  command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
+  changed_when: locale_lang != config_system_locale or locale_language != config_system_language
+  tags:
+    - common
+    - locale
