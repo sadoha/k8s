@@ -29,14 +29,14 @@ _Below you can find the description of the Ansible scripts, files, and roles._
 │   └── vars
 │       └── main.yml
 ├── common.yml
-├── control-planes
+├── control-plane
 │   ├── handlers
 │   │   └── main.yml
 │   ├── tasks
 │   │   └── main.yml
 │   └── vars
 │       └── main.yml
-├── control-planes.yml
+├── control-plane.yml
 ├── images
 │   ├── initialize-kubernetes-cluster.png
 │   └── kubernetes-logo.png
@@ -46,7 +46,7 @@ _Below you can find the description of the Ansible scripts, files, and roles._
 ├── README.md
 ├── vaults.yml <----------------- This file should be created manually because this file has sensitive variables
 ├── workers
-│   ├── control-planes.yml
+│   ├── control-plane.yml
 │   ├── handlers
 │   │   └── main.yml
 │   ├── tasks
@@ -70,7 +70,7 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
    ```
 2. In the second step, you have to update the _inventory.yml_ file and update IP addresses for the control-plane, workers, and hostnames.
    ```sh
-   control-planes:
+   control-plane:
       hosts:
         control-plane-01:
           ansible_host: 192.168.0.1                <--- update it
@@ -99,15 +99,14 @@ _Below is an example of how you can set up the Kubernetes cluster on your virtua
 
    * _Use it if you only need to kubeadm init the control-plane._
    ```sh
-   ansible-playbook main.yml --tags control-planes
+   ansible-playbook main.yml --tags control-plane
    ```
 
    * _Use the command below if you need to prepare the control-plane, all workers, and set up CNI without kubeadm init._
    ```sh
    ansible-playbook main.yml --skip-tags kubeadm-init
    ```
-4. Using this step, you can join any number of worker nodes to the cluster.
-   * _When the Kubernetes control-plane is initialized successfully in a previous step, you can join any number of worker nodes by running         the following._
+   * _Using this step, you can join any number of worker nodes to the cluster. When the Kubernetes control-plane is initialized successfully in a previous step, you can join any number of worker nodes by running the following._
      
    ```sh
    ansible-playbook main.yml --tags workers
