@@ -3,6 +3,6 @@
 - name: Setup Kubernetes Dependencies 
   import_playbook: common.yml
 - name: Initialize Kubernetes Control Planes
-  import_playbook: control-planes.yml
+  import_playbook: control-plane.yml
 - name: Initialize Kubernetes Workers 
   import_playbook: workers.yml
